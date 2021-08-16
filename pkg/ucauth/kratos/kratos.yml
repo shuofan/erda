@@ -11,7 +11,7 @@ serve:
     base_url: http://kratos:4434/
 
 selfservice:
-  default_browser_return_url: http://one.erda.local
+  default_browser_return_url: /
   whitelisted_return_urls:
     - http://127.0.0.1:4455
 
@@ -42,12 +42,12 @@ selfservice:
         default_browser_return_url: /
 
     login:
-      ui_url: http://one.erda.local/uc/auth/login
+      ui_url: /uc/auth/login
       lifespan: 10m
 
     registration:
       lifespan: 10m
-      ui_url: http://one.erda.local/uc/auth/registration 
+      ui_url: /uc/auth/registration
       after:
         password:
           hooks:
@@ -66,7 +66,7 @@ secrets:
 hashers:
   argon2:
     parallelism: 1
-    memory: 128MB
+    memory: 131072
     iterations: 2
     salt_length: 16
     key_length: 16
@@ -76,4 +76,4 @@ identity:
 
 courier:
   smtp:
-    connection_uri: smtps://test:test@mailslurper:1025/?skip_ssl_verify=true&legacy_ssl=true
+    connection_uri: smtps://test:test@mailslurper:1025/?skip_ssl_verify=true

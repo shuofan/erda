@@ -21,14 +21,14 @@ services:
     platform: linux/amd64
 
   kratos-migrate:
-    image: oryd/kratos:v0.5.5-alpha.1.pre.1-sqlite
+    image: oryd/kratos:v0.7.1-alpha.1
     environment:
-      - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true&mode=rwc
+      - DSN=mysql://root:123456@tcp(mysql:3306)/erda?max_conns=20&max_idle_conns=4
     volumes:
-      -
+      - 
         type: volume
-        source: kratos-sqlite
-        target: /var/lib/sqlite
+        source: erda-mysql
+        target: /var/lib/mysql
         read_only: false
       -
         type: bind
@@ -41,7 +41,7 @@ services:
       - default
 
   kratos-selfservice-ui-node:
-    image: oryd/kratos-selfservice-ui-node:v0.5.0-alpha.1
+    image: oryd/kratos-selfservice-ui-node:v0.7.1-alpha.1
     ports:
       - "4455:4455"
     environment:
@@ -59,21 +59,21 @@ services:
   kratos:
     depends_on:
       - kratos-migrate
-    image: oryd/kratos:v0.5.5-alpha.1.pre.1-sqlite
+    image: oryd/kratos:v0.7.1-alpha.1
     ports:
       - "4433:4433" # public
       - "4434:4434" # admin
     restart: unless-stopped
     environment:
-      - DSN=sqlite:///var/lib/sqlite/db.sqlite?_fk=true
+      - DSN=mysql://root:123456@tcp(mysql:3306)/erda?max_conns=20&max_idle_conns=4
       - LOG_LEVEL=trace
     command:
       serve -c /etc/config/kratos/kratos.yml --dev
     volumes:
-      -
+      - 
         type: volume
-        source: kratos-sqlite
-        target: /var/lib/sqlite
+        source: erda-mysql
+        target: /var/lib/mysql
         read_only: false
       -
         type: bind
@@ -359,7 +359,7 @@ services:
     image: erdaproject/mysql:5.7-quickstart
     container_name: erda-mysql
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - type: volume
         source: erda-mysql
@@ -387,7 +387,7 @@ services:
       - MIGRATION_ERDA_LINT=true
     volumes:
       - ../.erda/migrations:/migrations
-    restart: on-failure
+    # restart: on-failure
     platform: linux/amd64
 
   redis-sentinel:
@@ -413,7 +413,6 @@ volumes:
   erda-gittar: {}
   erda-avatars: {}
   erda-files: {}
-  kratos-sqlite: {}
 
 networks:
   default:

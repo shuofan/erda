@@ -681,6 +681,44 @@ services:
         path: "/healthy"
         duration: 120
       exec: {}
+    kratos:
+    cmd: "serve -c /etc/config/kratos/kratos.yml"
+    ports:
+      - port: 4433
+        protocol: "TCP"
+        l4_protocol: "TCP"
+        expose: true
+      - port: 4434
+        protocol: "TCP"
+        l4_protocol: "TCP"
+        expose: true
+    envs:
+      DEBUG: "false"
+      LISTEN_ADDR: ":12580"
+      UC_AUDITOR_CRON: "0 */1 * * * ?"
+      UC_AUDITOR_PULL_SIZE: "30"
+      UC_CLIENT_ID: "dice"
+      UC_CLIENT_SECRET: "secret"
+    resources:
+      cpu: ${request_cpu:0.2}
+      max_cpu: 0.2
+      mem: 64
+      network:
+        mode: "container"
+    binds:
+      - "${nfs_root:/netdata}/dice-ops/dice-config/certificates/etcd-ca.pem:/certs/etcd-ca.pem:ro"
+    deployments:
+      replicas: 1
+      labels:
+        GROUP: "devops"
+    expose:
+      - 12580
+    health_check:
+      http:
+        port: 4434
+        path: "/health/alive"
+        duration: 120
+      exec: {}
 addons:
   infos:
     plan: "custom:basic"
