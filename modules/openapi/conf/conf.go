@@ -168,6 +168,7 @@ func OryLoginURL() string {
 	return "/uc/auth/login"
 }
 
+// TODO change return url
 func OryLogoutURL() string {
 	return "/.ory/kratos/public/self-service/browser/flows/logout"
 }

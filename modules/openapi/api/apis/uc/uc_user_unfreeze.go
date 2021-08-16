@@ -86,6 +86,10 @@ func unfreezeUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleUnfreezeUser(userID, operatorID string, token ucauth.OAuthToken) error {
+	if token.TokenType == ucauth.OryCompatibleClientId {
+		return ucauth.ChangeUserState(token.AccessToken, userID, "active")
+	}
+
 	var resp struct {
 		Success bool   `json:"success"`
 		Result  bool   `json:"result"`

@@ -96,6 +96,26 @@ func createUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleCreateUsers(req *apistructs.UserCreateRequest, operatorID string, token ucauth.OAuthToken) error {
+	if token.TokenType == ucauth.OryCompatibleClientId {
+		// TODO public kratos addr
+		for _, user := range req.Users {
+			if err := ucauth.CreateUser(token.AccessToken, ucauth.OryKratosRegistrationRequest{
+				Method:   "password",
+				Password: user.Password,
+				Traits: ucauth.OryKratosIdentityTraits{
+					Email: user.Email,
+					Name: ucauth.OryKratosIdentityTraitsName{
+						First: user.Name,
+						Last:  "",
+					},
+					Nick: user.Nick,
+				},
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
 	var resp struct {
 		Success bool   `json:"success"`
 		Error   string `json:"error"`

@@ -127,6 +127,20 @@ type ucUpdateUserInfoReq struct {
 }
 
 func handleUpdateUserInfo(req *apistructs.UserUpdateInfoRequset, operatorID string, token ucauth.OAuthToken) error {
+	if token.TokenType == ucauth.OryCompatibleClientId {
+		updateReq := ucauth.OryKratosUpdateIdentitiyRequest{
+			State: "active",
+			Traits: ucauth.OryKratosIdentityTraits{
+				Email: req.Email,
+				Nick:  req.Nick,
+			},
+		}
+		if err := ucauth.UpdateIdentity(token.AccessToken, req.UserID, updateReq); err != nil {
+			return err
+		}
+		return nil
+	}
+
 	var resp struct {
 		Success bool   `json:"success"`
 		Error   string `json:"error"`

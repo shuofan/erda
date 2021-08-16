@@ -35,6 +35,7 @@ type User struct {
 	AvatarURL string `json:"avatar_url"`
 	Phone     string `json:"phone_number"`
 	Email     string `json:"email"`
+	State     string `json:"state"`
 }
 
 type UcUser struct {
