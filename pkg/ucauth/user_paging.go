@@ -110,7 +110,7 @@ func ConvertToUserInfoExt(user *userPaging) *apistructs.UserPagingData {
 
 // userInPaging 用户中心分页用户数据结构
 type userInPaging struct {
-	Id            interface{} `json:"id"`            // 主键
+	Id            USERID      `json:"id"`            // 主键
 	Avatar        string      `json:"avatar"`        // 头像
 	Username      string      `json:"username"`      // 用户名
 	Nickname      string      `json:"nickname"`      // 昵称

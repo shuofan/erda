@@ -38,6 +38,7 @@ type OryKratosIdentity struct {
 type OryKratosIdentityTraits struct {
 	Email string                      `json:"email"`
 	Name  OryKratosIdentityTraitsName `json:"name"`
+	Nick  string                      `json:"nickName"`
 }
 
 type OryKratosIdentityTraitsName struct {
@@ -52,8 +53,9 @@ func nameConversion(name OryKratosIdentityTraitsName) string {
 
 func identityToUser(i OryKratosIdentity) User {
 	return User{
-		ID:    string(i.ID),
-		Nick:  nameConversion(i.Traits.Name),
+		ID:    i.ID,
+		Name:  nameConversion(i.Traits.Name),
+		Nick:  i.Traits.Nick,
 		Email: i.Traits.Email,
 	}
 }
@@ -153,7 +155,7 @@ func getUserByKey(kratosPrivateAddr string, key string) ([]User, error) {
 			return nil, err
 		}
 		for _, u := range ul {
-			if strings.Contains(u.Name, key) || strings.Contains(u.Email, key) {
+			if strings.Contains(u.Name, key) || strings.Contains(u.Nick, key) || strings.Contains(u.Email, key) {
 				users = append(users, u)
 				cnt++
 			}
@@ -166,7 +168,6 @@ func getUserByKey(kratosPrivateAddr string, key string) ([]User, error) {
 			return users, nil
 		}
 	}
-	return nil, nil
 }
 
 func getUserPage(kratosPrivateAddr string, page, perPage int) ([]User, error) {

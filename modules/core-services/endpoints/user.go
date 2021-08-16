@@ -133,7 +133,7 @@ func convertToUserInfo(user *ucauth.User, plaintext bool) *apistructs.UserInfo {
 		user.Email = desensitize.Email(user.Email)
 	}
 	return &apistructs.UserInfo{
-		ID:     user.ID,
+		ID:     string(user.ID),
 		Name:   user.Name,
 		Nick:   user.Nick,
 		Avatar: user.AvatarURL,

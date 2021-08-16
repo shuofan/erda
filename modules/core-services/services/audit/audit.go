@@ -143,7 +143,7 @@ func (a *Audit) convertAuditsToExcelList(audits []model.Audit) ([][]string, erro
 		return nil, err
 	}
 	for _, u := range users {
-		userIDNameMap[u.ID] = u.Nick
+		userIDNameMap[string(u.ID)] = u.Nick
 	}
 
 	// 把r里的userID替换成userName

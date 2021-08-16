@@ -750,7 +750,7 @@ func (svc *Issue) batchCreateAssignChaningStream(req *apistructs.IssueBatchUpdat
 	}
 	userInfo := make(map[string]string, len(users))
 	for _, v := range users {
-		userInfo[v.ID] = v.Nick
+		userInfo[string(v.ID)] = v.Nick
 	}
 
 	for _, v := range issues {

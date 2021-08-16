@@ -18,7 +18,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -29,16 +28,7 @@ import (
 
 // User 用户中心用户数据结构
 type User struct {
-	ID        string `json:"user_id"`
-	Name      string `json:"username"`
-	Nick      string `json:"nickname"`
-	AvatarURL string `json:"avatar_url"`
-	Phone     string `json:"phone_number"`
-	Email     string `json:"email"`
-}
-
-type UcUser struct {
-	ID        int    `json:"user_id"`
+	ID        USERID `json:"user_id"`
 	Name      string `json:"username"`
 	Nick      string `json:"nickname"`
 	AvatarURL string `json:"avatar_url"`
@@ -136,7 +126,7 @@ func userPagingListMapper(user *userPaging) []User {
 	userList := make([]User, 0)
 	for _, u := range user.Data {
 		userList = append(userList, User{
-			ID:        strutil.String(u.Id),
+			ID:        u.Id,
 			Name:      u.Username,
 			Nick:      u.Nickname,
 			AvatarURL: u.Avatar,
@@ -174,7 +164,7 @@ func (c *UCClient) getUser(userID string) (*User, error) {
 		return nil, errors.Wrapf(err, "failed to get token when finding user")
 	}
 
-	var user UcUser
+	var user User
 	r, err := c.client.Get(c.baseURL).
 		Path(strutil.Concat("/api/open/v1/users/", userID)).
 		Header("Authorization", strutil.Concat("Bearer ", token.AccessToken)).
@@ -189,23 +179,23 @@ func (c *UCClient) getUser(userID string) (*User, error) {
 		}
 		return nil, errors.Errorf("failed to find user, status code: %d", r.StatusCode())
 	}
-	if user.ID == 0 {
+	if user.ID == "" {
 		return nil, errors.Errorf("failed to find user %s", userID)
 	}
 
-	return userMapper(&user), nil
+	return &user, nil
 }
 
-func userMapper(user *UcUser) *User {
-	return &User{
-		ID:        strconv.Itoa(user.ID),
-		Name:      user.Name,
-		Nick:      user.Nick,
-		AvatarURL: user.AvatarURL,
-		Phone:     user.Phone,
-		Email:     user.Email,
-	}
-}
+// func userMapper(user *UcUser) *User {
+// 	return &User{
+// 		ID:        strconv.Itoa(user.ID),
+// 		Name:      user.Name,
+// 		Nick:      user.Nick,
+// 		AvatarURL: user.AvatarURL,
+// 		Phone:     user.Phone,
+// 		Email:     user.Email,
+// 	}
+// }
 
 func (c *UCClient) findUsersByQuery(query string, idOrder ...string) ([]User, error) {
 	// 获取token
@@ -215,7 +205,7 @@ func (c *UCClient) findUsersByQuery(query string, idOrder ...string) ([]User, er
 	}
 
 	// 批量查询用户
-	var users []UcUser
+	var users []User
 	var b bytes.Buffer
 	r, err := c.client.Get(c.baseURL).
 		Path("/api/open/v1/users").
@@ -235,21 +225,21 @@ func (c *UCClient) findUsersByQuery(query string, idOrder ...string) ([]User, er
 
 	// 保证顺序
 	if len(idOrder) > 0 {
-		userMap := make(map[string]User)
+		userMap := make(map[USERID]User)
 		for _, user := range users {
-			userMap[strconv.Itoa(user.ID)] = *userMapper(&user)
+			userMap[user.ID] = user
 		}
 		var orderedUsers []User
 		for _, id := range idOrder {
-			orderedUsers = append(orderedUsers, userMap[id])
+			orderedUsers = append(orderedUsers, userMap[USERID(id)])
 		}
 		return orderedUsers, nil
 	}
 
-	userList := make([]User, len(users))
-	for i, user := range users {
-		userList[i] = *userMapper(&user)
-	}
+	// userList := make([]User, len(users))
+	// for i, user := range users {
+	// 	userList[i] = *userMapper(&user)
+	// }
 
-	return userList, nil
+	return users, nil
 }

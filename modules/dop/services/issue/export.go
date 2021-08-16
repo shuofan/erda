@@ -65,7 +65,7 @@ func (svc *Issue) ExportExcel(issues []apistructs.Issue, properties []apistructs
 	}
 	usernames := map[string]string{}
 	for _, u := range users {
-		usernames[u.ID] = u.Nick
+		usernames[string(u.ID)] = u.Nick
 	}
 	for i := 1; i < len(table); i++ {
 		if table[i][4] != "" {
