@@ -24,7 +24,7 @@ selfservice:
       ui_url: /uc/error
 
     settings:
-      ui_url: /uc/settings
+      ui_url: http://one.erda.local/uc/settings
       privileged_session_max_age: 15m
 
     recovery:

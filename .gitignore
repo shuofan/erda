@@ -60,3 +60,5 @@ apistructs/generated_desc.go
 quick-start/data
 
 modules/openapi/api/generate
+
+.history
