@@ -73,6 +73,7 @@ func (c *Context) wrapRequest(m func(host string, retry ...httpclient.RetryOptio
 	if v, ok := c.Sessions[c.CurrentOpenApiHost]; ok && v.SessionID != "" {
 		req.Cookie(&http.Cookie{Name: "OPENAPISESSION", Value: c.Sessions[c.CurrentOpenApiHost].SessionID})
 	}
+	// todo add
 	return req
 }
 
