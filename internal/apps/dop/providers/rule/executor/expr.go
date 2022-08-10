@@ -20,6 +20,7 @@ import (
 	"github.com/antonmedv/expr"
 
 	rulepb "github.com/erda-project/erda-proto-go/dop/rule/pb"
+	"github.com/erda-project/erda/internal/apps/dop/providers/rule/actions/api"
 	"github.com/erda-project/erda/internal/apps/dop/providers/rule/db"
 )
 
@@ -39,9 +40,11 @@ type RuleEnv struct {
 }
 
 type RuleConfig struct {
-	RuleID string
-	Code   string
-	Action db.ActionParams
+	RuleID     string
+	Code       string
+	Action     db.ActionParams
+	APIConfigs []*api.APIConfig
+	ProjectID  string
 }
 
 func (e *ExprExecutor) Exec(r *RuleConfig, env map[string]interface{}) (bool, error) {

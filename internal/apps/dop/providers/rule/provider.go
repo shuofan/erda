@@ -21,6 +21,7 @@ import (
 	"github.com/erda-project/erda-infra/base/servicehub"
 	"github.com/erda-project/erda-infra/pkg/transport"
 	"github.com/erda-project/erda-proto-go/dop/rule/pb"
+	"github.com/erda-project/erda/bundle"
 	"github.com/erda-project/erda/internal/apps/dop/dao"
 	"github.com/erda-project/erda/internal/apps/dop/providers/rule/actions/api"
 	"github.com/erda-project/erda/internal/apps/dop/providers/rule/db"
@@ -57,6 +58,7 @@ func (p *provider) Init(ctx servicehub.Context) error {
 			DB: p.db,
 		},
 		API: p.API,
+		Bdl: bundle.New(bundle.WithDOP()),
 	}
 	p.ruleService = &ruleService{p}
 	if p.Register != nil {

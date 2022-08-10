@@ -38,6 +38,7 @@ var (
 	PipelineSourceAutoTest         PipelineSource = "autotest"
 	PipelineSourceAutoTestPlan     PipelineSource = "autotest-plan"
 	PipelineSourceAutoTestSceneSet PipelineSource = "autotest-scene-set"
+	PipelineSourceRuleAPI          PipelineSource = "rule-api"
 
 	// cdp workflow
 	PipelineSourceCDPDev     PipelineSource = "cdp-dev"

@@ -19,6 +19,7 @@ import (
 
 	"github.com/erda-project/erda-proto-go/dop/rule/pb"
 	"github.com/erda-project/erda/apistructs"
+	"github.com/erda-project/erda/bundle"
 	"github.com/erda-project/erda/internal/apps/dop/providers/rule/actions/api"
 	"github.com/erda-project/erda/internal/apps/dop/providers/rule/db"
 )
@@ -26,6 +27,7 @@ import (
 type Executor struct {
 	RuleExecutor
 	API api.Interface
+	Bdl *bundle.Bundle
 }
 
 func (e *Executor) Fire(req *pb.FireRequest) ([]bool, error) {
